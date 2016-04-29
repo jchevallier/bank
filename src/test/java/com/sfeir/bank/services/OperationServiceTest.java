@@ -33,7 +33,7 @@ public class OperationServiceTest {
     }
 
     @Test
-    public void should_add_amount_when_formatter_succeed() {
+    public void should_save_when_formatter_succeed() {
         formattedValue = Optional.of(BigDecimal.TEN);
 
         operationService.save("");
@@ -42,8 +42,26 @@ public class OperationServiceTest {
     }
 
     @Test
-    public void should_contains_invalid_input_when_formatter_fail() {
+    public void should_not_save_when_formatter_fail() {
         formattedValue = Optional.empty();
+
+        operationService.save("");
+
+        Mockito.verify(accountService, Mockito.never()).addAmount(Mockito.any());
+    }
+
+    @Test
+    public void should_not_save_when_negative_amount() {
+        formattedValue = Optional.of(BigDecimal.valueOf(-10));
+
+        operationService.save("");
+
+        Mockito.verify(accountService, Mockito.never()).addAmount(Mockito.any());
+    }
+
+    @Test
+    public void should_not_save_when_amount_is_zero() {
+        formattedValue = Optional.of(BigDecimal.ZERO);
 
         operationService.save("");
 

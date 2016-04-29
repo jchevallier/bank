@@ -20,6 +20,7 @@ public class OperationService {
     public OperationResult save(String amount) {
         Optional<BigDecimal> formattedAmount = formatter.format(amount);
         return formattedAmount
+                .filter(validAmount -> BigDecimal.ZERO.compareTo(validAmount) < 0)
                 .map(accountService::addAmount)
                 .orElse(OperationResult.createInvalidOperation(ErrorType.INVALID_INPUT));
     }
