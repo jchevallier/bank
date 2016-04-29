@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Bank</title>
+</head>
+<body>
+    <h1>Bank account</h1>
+    <div id="balance" th:text="'Balance : ' + ${#numbers.formatDecimal(balance, 1, 2) + '€'}"></div>
+    <div>
+        <h2>Deposite</h2>
+        <form method="POST" action="/deposite">
+            <label for="deposite">Amount :</label>
+            <input id="deposite" type="text" name="amount" />
+            <span>€</span>
+        </form>
+    </div>
+</body>
+</html>
