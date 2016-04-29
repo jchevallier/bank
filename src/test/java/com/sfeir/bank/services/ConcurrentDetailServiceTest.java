@@ -1,45 +1,48 @@
 package com.sfeir.bank.services;
 
-import com.sfeir.bank.services.AccountService;
 import org.assertj.core.api.Assertions;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.stream.Stream;
 
-public class ConcurrentAccountServiceTest {
+public class ConcurrentDetailServiceTest {
+
+    private static final Date NOW = new Date();
 
     @InjectMocks
-    private AccountService accountService;
-
-    @Mock
     private DetailService detailService;
 
-    public ConcurrentAccountServiceTest() {
+    @Mock
+    private TimeService timeService;
+
+    public ConcurrentDetailServiceTest() {
         MockitoAnnotations.initMocks(this);
+        Mockito.when(timeService.now()).thenReturn(NOW);
     }
 
     @AfterMethod
     public void tearDown() throws Exception {
-        accountService.resetAccount();
+        detailService.resetOperations();
     }
 
     @Test
     public void should_add_amount_to_balance_atomically_when_executed_in_concurrence() throws InterruptedException {
         BigDecimal amount = BigDecimal.TEN;
 
-        Thread t1 = new Thread(() -> Stream.generate(() -> amount).limit(10).forEach(accountService::addAmount));
-        Thread t2 = new Thread(() -> Stream.generate(() -> amount).limit(10).forEach(accountService::addAmount));
+        Thread t1 = new Thread(() -> Stream.generate(() -> amount).limit(100).forEach(detailService::addOperation));
+        Thread t2 = new Thread(() -> Stream.generate(() -> amount).limit(100).forEach(detailService::addOperation));
         t1.start();
         t2.start();
 
         t1.join();
         t2.join();
-        Assertions.assertThat(accountService.getBalance()).isEqualTo(BigDecimal.valueOf(200));
+        Assertions.assertThat(detailService.getOperations()).hasSize(200);
     }
-
 }

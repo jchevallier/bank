@@ -3,6 +3,7 @@ package com.sfeir.bank.controllers;
 import com.sfeir.bank.beans.OperationResult;
 import com.sfeir.bank.beans.Request;
 import com.sfeir.bank.services.AccountService;
+import com.sfeir.bank.services.DetailService;
 import com.sfeir.bank.services.OperationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,9 +21,18 @@ public class OperationController {
     @Autowired
     private AccountService accountService;
 
+    @Autowired
+    private DetailService detailService;
+
     @RequestMapping("/")
     public String home(Model model) {
+        return displayMainPage(model);
+    }
+
+    private String displayMainPage(Model model) {
         model.addAttribute("balance", accountService.getBalance());
+        model.addAttribute("operations",  detailService.getOperations());
+
         return "main";
     }
 
@@ -31,9 +41,7 @@ public class OperationController {
         OperationResult result = operationService.save(request.getAmount());
 
         model.addAttribute("result", result);
-        model.addAttribute("balance", accountService.getBalance());
-
-        return "main";
+        return displayMainPage(model);
     }
 
     @RequestMapping(value = "/withdraw", method = RequestMethod.POST)
@@ -41,8 +49,6 @@ public class OperationController {
         OperationResult result = operationService.withdraw(request.getAmount());
 
         model.addAttribute("result", result);
-        model.addAttribute("balance", accountService.getBalance());
-
-        return "main";
+        return displayMainPage(model);
     }
 }

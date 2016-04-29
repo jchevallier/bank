@@ -26,5 +26,22 @@
             <span>€</span>
         </form>
     </div>
+    <div>
+        <h2>Opérations</h2>
+        <table>
+            <thead>
+                <th>Operation</th>
+                <th>Date</th>
+                <th>Amount</th>
+            </thead>
+            <tbody>
+                <tr th:each="operation : ${operations}">
+                    <td th:text="${operation.type}"></td>
+                    <td th:text="${#dates.format(operation.creationDate, 'dd/MM/yyyy')}"></td>
+                    <td th:text="${#numbers.formatDecimal(operation.amount, 1, 2) + '€'}"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </body>
 </html>
