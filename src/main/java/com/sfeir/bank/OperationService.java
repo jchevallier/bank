@@ -12,10 +12,13 @@ public class OperationService {
     @Autowired
     private AmountFormatter formatter;
 
+    @Autowired
+    private AccountService accountService;
+
     public OperationResult save(String amount) {
         Optional<BigDecimal> formattedAmount = formatter.format(amount);
         return formattedAmount
-                .map(OperationResult::createValidOperation)
+                .map(accountService::addAmount)
                 .orElse(OperationResult.createInvalidOperation(ErrorType.INVALID_INPUT));
     }
 }

@@ -2,5 +2,5 @@ package com.sfeir.bank;
 
 public enum ErrorType {
 
-    INVALID_INPUT
+    INSUFFICIENT_FUNDS, INVALID_INPUT
 }

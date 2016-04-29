@@ -5,6 +5,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.math.BigDecimal;
@@ -18,31 +19,33 @@ public class OperationServiceTest {
     @Mock
     private AmountFormatter formatter;
 
+    @Mock
+    private AccountService accountService;
+
     private Optional<BigDecimal> formattedValue;
 
-    public OperationServiceTest() {
+    @BeforeMethod
+    public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         Mockito.when(formatter.format(Mockito.anyString())).then(invocationOnMock -> formattedValue);
     }
 
     @Test
-    public void should_save_money_when_formatter_succeed() {
+    public void should_add_amount_when_formatter_succeed() {
         formattedValue = Optional.of(BigDecimal.TEN);
 
-        OperationResult result = operationService.save("");
+        operationService.save("");
 
-        Assertions.assertThat(result.isValid());
-        Assertions.assertThat(result.getResult()).isEqualTo(formattedValue.get());
+        Mockito.verify(accountService).addAmount(formattedValue.get());
     }
 
     @Test
     public void should_contains_invalid_input_when_formatter_fail() {
         formattedValue = Optional.empty();
 
-        OperationResult result = operationService.save("");
+        operationService.save("");
 
-        Assertions.assertThat(result.isValid());
-        Assertions.assertThat(result.getErrorType()).isEqualTo(ErrorType.INVALID_INPUT);
+        Mockito.verify(accountService, Mockito.never()).addAmount(Mockito.any());
     }
 
 }
