@@ -1,5 +1,7 @@
-package com.sfeir.bank;
+package com.sfeir.bank.services;
 
+import com.sfeir.bank.beans.ErrorType;
+import com.sfeir.bank.beans.OperationResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

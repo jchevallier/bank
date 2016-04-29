@@ -1,4 +1,4 @@
-package com.sfeir.bank;
+package com.sfeir.bank.beans;
 
 import java.math.BigDecimal;
 

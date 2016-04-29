@@ -1,5 +1,6 @@
-package com.sfeir.bank;
+package com.sfeir.bank.services;
 
+import com.sfeir.bank.services.AccountService;
 import org.assertj.core.api.Assertions;
 import org.testng.annotations.Test;
 

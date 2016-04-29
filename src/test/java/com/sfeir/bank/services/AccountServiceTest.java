@@ -1,5 +1,8 @@
-package com.sfeir.bank;
+package com.sfeir.bank.services;
 
+import com.sfeir.bank.beans.ErrorType;
+import com.sfeir.bank.beans.OperationResult;
+import com.sfeir.bank.services.AccountService;
 import org.assertj.core.api.Assertions;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;

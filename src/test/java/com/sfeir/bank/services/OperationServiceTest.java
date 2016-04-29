@@ -1,6 +1,8 @@
-package com.sfeir.bank;
+package com.sfeir.bank.services;
 
-import org.assertj.core.api.Assertions;
+import com.sfeir.bank.services.AccountService;
+import com.sfeir.bank.services.AmountFormatter;
+import com.sfeir.bank.services.OperationService;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;

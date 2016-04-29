@@ -1,6 +1,8 @@
-package com.sfeir.bank;
+package com.sfeir.bank.services;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.sfeir.bank.beans.ErrorType;
+import com.sfeir.bank.beans.OperationResult;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;

@@ -1,6 +1,6 @@
-package com.sfeir.bank;
+package com.sfeir.bank.services;
 
-import com.sfeir.bank.AmountFormatter;
+import com.sfeir.bank.services.AmountFormatter;
 import org.assertj.core.api.Assertions;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
