@@ -1,8 +1,5 @@
 package com.sfeir.bank.services;
 
-import com.sfeir.bank.services.AccountService;
-import com.sfeir.bank.services.AmountFormatter;
-import com.sfeir.bank.services.OperationService;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -52,7 +49,7 @@ public class OperationServiceTest {
 
     @Test
     public void should_not_save_when_negative_amount() {
-        formattedValue = Optional.of(BigDecimal.valueOf(-10));
+        formattedValue = Optional.of(BigDecimal.TEN.negate());
 
         operationService.save("");
 
@@ -68,4 +65,39 @@ public class OperationServiceTest {
         Mockito.verify(accountService, Mockito.never()).addAmount(Mockito.any());
     }
 
+    @Test
+    public void should_withdraw_and_negate_amount_when_formatter_succeed() {
+        formattedValue = Optional.of(BigDecimal.TEN);
+
+        operationService.withdraw("");
+
+        Mockito.verify(accountService).addAmount(formattedValue.get().negate());
+    }
+
+    @Test
+    public void should_not_withdraw_when_formatter_fail() {
+        formattedValue = Optional.empty();
+
+        operationService.withdraw("");
+
+        Mockito.verify(accountService, Mockito.never()).addAmount(Mockito.any());
+    }
+
+    @Test
+    public void should_not_withdraw_when_negative_amount() {
+        formattedValue = Optional.of(BigDecimal.TEN.negate());
+
+        operationService.withdraw("");
+
+        Mockito.verify(accountService, Mockito.never()).addAmount(Mockito.any());
+    }
+
+    @Test
+    public void should_not_withdraw_when_amount_is_zero() {
+        formattedValue = Optional.of(BigDecimal.ZERO);
+
+        operationService.withdraw("");
+
+        Mockito.verify(accountService, Mockito.never()).addAmount(Mockito.any());
+    }
 }

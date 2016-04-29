@@ -24,4 +24,13 @@ public class OperationService {
                 .map(accountService::addAmount)
                 .orElse(OperationResult.createInvalidOperation(ErrorType.INVALID_INPUT));
     }
+
+    public OperationResult withdraw(String amount) {
+        Optional<BigDecimal> formattedAmount = formatter.format(amount);
+        return formattedAmount
+                .filter(validAmount -> BigDecimal.ZERO.compareTo(validAmount) < 0)
+                .map(BigDecimal::negate)
+                .map(accountService::addAmount)
+                .orElse(OperationResult.createInvalidOperation(ErrorType.INVALID_INPUT));
+    }
 }

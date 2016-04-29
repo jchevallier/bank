@@ -26,9 +26,19 @@ public class OperationController {
         return "main";
     }
 
-    @RequestMapping(value = "/deposite", method = RequestMethod.POST, headers = "content-type=application/x-www-form-urlencoded")
+    @RequestMapping(value = "/deposite", method = RequestMethod.POST)
     public String saveMoney(@ModelAttribute Request request, Model model) {
         OperationResult result = operationService.save(request.getAmount());
+
+        model.addAttribute("result", result);
+        model.addAttribute("balance", accountService.getBalance());
+
+        return "main";
+    }
+
+    @RequestMapping(value = "/withdraw", method = RequestMethod.POST)
+    public String withdrawMoney(@ModelAttribute Request request, Model model) {
+        OperationResult result = operationService.withdraw(request.getAmount());
 
         model.addAttribute("result", result);
         model.addAttribute("balance", accountService.getBalance());
