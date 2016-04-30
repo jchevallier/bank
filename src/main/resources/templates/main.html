@@ -3,32 +3,72 @@
 <head>
     <meta charset="UTF-8"/>
     <title>Bank</title>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous"/>
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous"/>
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
 </head>
 <body>
-    <h1>Bank account</h1>
-    <div>
-        <h2>Balance</h2>
-        <span id="balance" th:text="${#numbers.formatDecimal(balance, 1, 2) + '€'}"></span>
+    <div class="alert alert-success" th:if="${result != null and result.isValid()}">
+        You successfully
+        <span th:text="${operationType != null and T(com.sfeir.bank.beans.OperationType).DEPOSITE.equals(operationType) ? 'deposit' : 'withdraw'}"></span>
+        <span th:text="${result != null ? input : 0}"></span>
+        €
     </div>
-    <div>
-        <h2>Deposite</h2>
-        <form method="POST" action="/deposite">
-            <label for="deposite">Amount :</label>
-            <input id="deposite" type="text" name="amount" />
-            <span>€</span>
+    <div class="container">
+        <div class="jumbotron">
+            <h1>Bank account</h1>
+        </div>
+    </div>
+    <div class="container">
+        <div class="page-header">
+            <h2>Balance</h2>
+        </div>
+        <h1>
+            <span class="label label-primary" th:text="${#numbers.formatDecimal(balance, 1, 2) + ' €'}"></span>
+        </h1>
+    </div>
+    <div class="container">
+        <div class="page-header">
+            <h2>Deposite</h2>
+        </div>
+        <form method="POST" action="/deposite" class="form-inline">
+            <div class="form-group" th:classappend="${T(com.sfeir.bank.beans.OperationType).DEPOSITE.equals(operationType) and result != null and !result.isValid()} ? has-error : default">
+                <label for="deposite" class="sr-only">Amount (in euros)</label>
+                <div class="input-group">
+                    <input id="deposite" type="text" name="amount" class="form-control" placeholder="Amount" th:value="${result != null and !result.isValid() and T(com.sfeir.bank.beans.OperationType).DEPOSITE.equals(operationType) ? input : null}"/>
+                    <div class="input-group-addon">€</div>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Deposit</button>
+            <div><small th:if="${T(com.sfeir.bank.beans.OperationType).DEPOSITE.equals(operationType) and result != null and !result.isValid()}" class="text-muted">Invalid input</small></div>
         </form>
     </div>
-    <div>
-        <h2>Withdraw</h2>
-        <form method="POST" action="/withdraw">
-            <label for="withdraw">Amount :</label>
-            <input id="withdraw" type="text" name="amount" />
-            <span>€</span>
+    <div class="container">
+        <div class="page-header">
+            <h2>Withdraw</h2>
+        </div>
+        <form method="POST" action="/withdraw" class="form-inline">
+            <div class="form-group"  th:classappend="${T(com.sfeir.bank.beans.OperationType).WITHDRAW.equals(operationType) and result != null and !result.isValid()} ? has-error : default">
+                <label for="withdraw" class="sr-only">Amount (in euros)</label>
+                <div class="input-group">
+                    <input id="withdraw" type="text" name="amount" class="form-control" placeholder="Amount" th:value="${result != null and !result.isValid() and T(com.sfeir.bank.beans.OperationType).WITHDRAW.equals(operationType) ? input : null}"/>
+                    <div class="input-group-addon">€</div>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Withdraw</button>
+            <div><small th:if="${T(com.sfeir.bank.beans.OperationType).WITHDRAW.equals(operationType) and result != null and !result.isValid()}" th:text="${(result != null and T(com.sfeir.bank.beans.ErrorType).INSUFFICIENT_FUNDS.equals(result.errorType)) ? 'Insufficient funds' : 'Invalid input'}" class="text-muted"></small></div>
         </form>
     </div>
-    <div>
-        <h2>Opérations</h2>
-        <table>
+    <div class="container" th:if="${!operations.isEmpty()}">
+        <div class="page-header">
+            <h2>Opérations</h2>
+        </div>
+        <table class="table table-striped">
             <thead>
                 <th>Operation</th>
                 <th>Date</th>

@@ -1,6 +1,8 @@
 package com.sfeir.bank.controllers;
 
+import com.google.common.collect.Lists;
 import com.sfeir.bank.beans.OperationResult;
+import com.sfeir.bank.beans.OperationType;
 import com.sfeir.bank.beans.Request;
 import com.sfeir.bank.services.AccountService;
 import com.sfeir.bank.services.DetailService;
@@ -31,7 +33,7 @@ public class OperationController {
 
     private String displayMainPage(Model model) {
         model.addAttribute("balance", accountService.getBalance());
-        model.addAttribute("operations",  detailService.getOperations());
+        model.addAttribute("operations", Lists.reverse(detailService.getOperations()));
 
         return "main";
     }
@@ -40,6 +42,8 @@ public class OperationController {
     public String saveMoney(@ModelAttribute Request request, Model model) {
         OperationResult result = operationService.save(request.getAmount());
 
+        model.addAttribute("input", request.getAmount());
+        model.addAttribute("operationType", OperationType.DEPOSITE);
         model.addAttribute("result", result);
         return displayMainPage(model);
     }
@@ -48,6 +52,8 @@ public class OperationController {
     public String withdrawMoney(@ModelAttribute Request request, Model model) {
         OperationResult result = operationService.withdraw(request.getAmount());
 
+        model.addAttribute("input", request.getAmount());
+        model.addAttribute("operationType", OperationType.WITHDRAW);
         model.addAttribute("result", result);
         return displayMainPage(model);
     }
